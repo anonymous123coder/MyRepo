@@ -1,5 +1,7 @@
 FROM nginx:alpine
 
-COPY Work.html /usr/share/nginx/html/Work.html
+COPY index.html /usr/share/nginx/html/index.html
 
 EXPOSE 8000
+
+# CMD ["service", "ssh", "start"]
