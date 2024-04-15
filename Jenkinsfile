@@ -1,20 +1,23 @@
 pipeline {
-    agent any
-    
+    agent any 
     stages {
-        stage('Build') {
+        stage('Clone the repo') {
             steps {
-                // Copy index.html to the workspace
-                sh 'index.html .'
+                echo 'clone the repo'
+                sh 'rm -fr html'
+                sh 'git clone https://github.com/anonymous123coder/MyRepo.git'
             }
         }
-        
-        stage('Deploy') {
+        stage('push repo to remote host') {
             steps {
-                // Example: Deploy to a web server via SSH
-                sshagent(credentials: ['your-ssh-credentials']) {
-                    sh 'scp index.html localhost:8000'
-                }
+                echo 'connect to remote host and pull down the latest version'
+                sh 'ssh -i ~/working.pem ec2-user@localhost sudo git -C /var/www/html pull'
+            }
+        }
+        stage('Check website is up') {
+            steps {
+                echo 'Check website is up'
+                sh 'curl -Is localhost | head -n 1'
             }
         }
     }
